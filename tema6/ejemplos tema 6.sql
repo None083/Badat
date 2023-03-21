@@ -132,7 +132,64 @@ from centros join departamentos on centros.numce = departamentos.numce
 where fecfindir is null
 order by nomce, nomde, empleados.nomem;
 
--- relaciones 1-4 entran en el examen --
+-- relaciones 1-4 y 9 entran en el examen --
+
+-- funciones agregado --
+
+-- cuantos empleados hay
+select count(*), count(numem), count(distinct numde) -- cuenta celdas
+from empleados;
+
+-- cuanto me cuesta al mes pagar a mis empleados
+select sum(salarem)
+from empleados;
+
+-- cual es el salario maximo
+select max(salarem)
+from empleados;
+
+-- cual es el salario minimo
+select min(salarem)
+from empleados;
+
+-- cual es la media
+select avg(salarem)
+from empleados;
+
+select count(*) as numEmpleados, max(salarem) as SalarMax, sum(salarem) as TotalSalar,
+	min(salarem) as SalarMin, avg(salarem) as SalarMedio
+from empleados;
+
+-- grupos por departamento
+select numde, count(*) as numEmpleados, max(salarem) as SalarMax, sum(salarem) as TotalSalar,
+	min(salarem) as SalarMin, avg(salarem) as SalarMedio
+from empleados
+group by numde;
+
+-- una rutina que devuelva el numero de extensiones que utiliza un departamento
+
+delimiter **
+drop function if exists devuelveNumeroExtensiones **
+create function devuelveNumeroExtensiones
+	(numDepto int)
+returns int
+DETERMINISTIC
+begin
+
+	return (select count(distinct extelem)
+    from empleados
+    where numde = numdepto);
+
+end **    
+delimiter ;
+select nomde, devuelveNumeroExtensiones(numde)
+from departamentos
+order by nomde;
+
+
+
+
+
 
 
 

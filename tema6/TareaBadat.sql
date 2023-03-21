@@ -41,7 +41,18 @@ end $$
 delimiter ;
 
 
-
+-- 3 version jorge, que en verda está mal --
+/*	drop procedure if exists empleadoDirigir;
+	delimiter **
+	create procedure empleadosDirigir()
+		begin
+			select nomem, nomde
+			from empleados
+			left join dirigir on empleados.numem = dirigir.numempdirec
+				left join departamentos on dirigir.numdepto = departamentos.numde
+					and (fecfindir is null or fecfindir=curdate());
+		end **
+*/
 
 
 
