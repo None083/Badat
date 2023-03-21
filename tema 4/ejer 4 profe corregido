@@ -1,0 +1,34 @@
+drop table if exists turnosSeguridad;
+    create table if not exists turnosSeguridad(
+    codturno int unsigned,
+    fecIni time,
+    fecFin time,
+    constraint pk_turnosSeguridad primary key(codturno) 
+    );
+    
+    create table if not exists vigilar(
+    codvigilancia int unsigned,
+    codsala int unsigned,
+    codsegur int unsigned,
+    codturno int unsigned,
+    fecini date,
+    fecfin date,
+    constraint pk_vigilar primary key (codvigilancia),
+    constraint fk_vigilar_seguridad foreign key(codsegur) 
+		references seguridad(codsegur) on delete no action on update cascade,
+	constraint fk_vigilar_salas foreign key(codsla) 
+		references salas(codsala) on delete no action on update cascade
+    );
+    
+    -----------------------------------------
+    
+    -- los empleados pertenecen a un depto
+    
+    create table if not exists deparRest(
+    codDeparRest int unsigned,
+    infoDepar varchar(60),
+    pk_deparRest primary key (codDeparRest)
+    
+    );
+    
+    -- cambiamos a la opcion b en la jerarquia

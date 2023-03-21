@@ -1,0 +1,12 @@
+-introduccion
+-factores que infliyen en la eleccuion de la herramienta
+-entorno cliente, servidor, que es e interfaz
+-ejemplo para un servidor que esta en una direccion que se necesita para acceder a ese servidor desde un maquina
+-organizacion fisica de los datos, archivo de config, motores almacen
+-actividad 3.4, 1_ /var/lib/mysql; 3_ bind-adress 192.168.56.101; 5_ comentarios; 6_ usuario que tiene permisos para acceder a los datos user = mysql 7_ 
+-ejer 3.5
+-los metadatos, base de datos mysql
+
+hasta aqui puede entrar
+
+a partir de el lenguaje sql puede preguntar los tipos de sentencias 3.6

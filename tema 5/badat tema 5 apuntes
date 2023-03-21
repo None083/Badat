@@ -1,0 +1,5 @@
+update loquesea
+set loquesea = loquesea
+where (nomem='nombre' and ape1em='apellido')
+	or (nomem='nombre2' and ape1em='apellido2');
+	para hacer compias de seguridad en administracion, data export
