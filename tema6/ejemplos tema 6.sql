@@ -186,8 +186,64 @@ select nomde, devuelveNumeroExtensiones(numde)
 from departamentos
 order by nomde;
 
+-- 10/04/23
+
+-- simulacro actividades
+-- 3
+-- fecinirest between fec1 and fec2 MEJOR OPCION
+-- fecinirest>= fec1 and fecinirest<= fec2;
+
+-- esto estaría mal, ya que no se puede devolver una lista de datos, solo uno en concreto
+delimiter **
+create function devExtension()
+returns char(3) -- está mal, ya que no devuelve un char, si no una lista, la cual tampoco se puede hacer
+deterministic
+begin
+	return
+		(select extelem
+        from empleados
+        );
+end **
+delimiter **
+select devExtension();
+
+-- esto sí estaría bien, porque se devuelve un solo dato en concreto
+drop function if exists devExtension;
+delimiter **
+create function devExtension(
+					empleado int)
+returns char(3)
+deterministic
+begin
+	return
+		(select extelem
+        from empleados
+        where numem= empleado
+        );
+end **
+delimiter **
+select devExtension(120);
+
+-- version procedimiento con varios datos a devolver
+drop procedure if exists devExtension;
+delimiter **
+create procedure devExtension(
+					in empleado int, out extension char(3), out salario decimal(10,2))
+begin
+		select extelem, salarem into extension, salario -- es importante el orden para guardar correctamente
+        from empleados
+        where numem= empleado;
+end **
+delimiter **
+call devExtension(120, @extension, @salario); -- con solo esto no se vería nada, aunque se ejecutaría correctamente
+select @extension as extension, @salario as salario; -- al haber guadado los datos con el into, ya podemos ver los datos
 
 
+-- simulacro actividades, p6, version modificada para left join
+
+select nomsala, nombreobra, ifnull(valoracion, 'sin valorar')
+from salas left join obras on salas.codsala=obras.codsala
+order by salas.nomsala, nombreobra;
 
 
 
