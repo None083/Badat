@@ -45,6 +45,39 @@ begin
 end **
 
 -- 26
+-- Borrar de la tabla EMPLEADOS a los empleados cuyo salario (sin incluir la comisión) 
+-- supere al salario medio de los empleados de su departamento.
+
+drop procedure if exists proc_ejer_6_4_26;
+delimiter $$
+
+create procedure proc_ejer_6_4_26()
+begin
+	-- call proc_ejer_6_4_26();
+    -- el ejercicio pide que los borremos, pero, para verlo vamos a hacer una selección:
+	/* select numem
+	from empleados 
+    where salarem >= (select avg(salarem)
+					  from empleados as e
+                      where e.numde = empleados.numde); */	
+    -- HAGAMOS AHORA EL BORRADO COMO PIDE EL EJERCICIO
+    delete from empleados 
+    where salarem >= (select avg(salarem)
+					  from empleados as e
+                      where e.numde = empleados.numde);
+end $$
+delimiter ;
+
+
+-- 27
+-- Disminuir en la tabla EMPLEADOS un 5% el salario de los empleados 
+-- que superan el 50% del salario máximo de su departamento.
+
+update empleados
+set salarem = salarem*0.95
+where salarem > 0.50*(select max(salarem)
+						from empleados as e 
+						where e.numde = empleado.numde);
 
 
 
