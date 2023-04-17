@@ -43,3 +43,12 @@ create procedure ejercicio4_4(depto int)
 begin
 	
 end **
+
+-- 26
+
+
+
+
+
+
+
