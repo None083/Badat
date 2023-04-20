@@ -99,6 +99,43 @@ from empleados
 where salarem <> all (select salarem
 					from empleados);
                     
+-- 20/04/23
+
+/* se suman filas con "union", deben tener dominios compatibles
+si un dato fuera decimal y el otro varchar no se podría
+deben haber el mismo numero de columnas y el mismo orden */
+drop view if exists invitados;
+create view invitados
+	(numInvitado, nombreInvitado, emailInvitado) -- alias
+as
+select numcli as identificador, concat_ws(' ', nomcli, ape1cli, ape2cli) as invitado, email as emailInvitado
+from clientes
+union -- si le pongo el distinct no salen repetidos, si pongo all salen todos
+select numem, concat_ws(' ', nomem, ape1em, ape2em), dniem
+from empleados;
+/* el create view es parecido auna tabla temporal, pero no ocupa espacio y se puede usar 
+para trabajar con estos datos que he unido como he querido con union */
+
+select * from invitados;
+
+/*union
+select numcolab, nombrecompleto, emailcolab
+from colaboradores
+....*/
+
+/* Prepara una vista para la bd de promociones
+que se llamará CATALOGOPRODUCTOS que tenga la referencia del articulo, 
+el codigo de y nombre de categoria, nombre del articulo 
+y el precio base y el precio de venta HOY */
+
+
+/* Para la base de datos de empresaclase: 
+prepara una vista que se llamará LISTINTELEFONICO, en la que cada 
+usuario podrá consultar la extensión
+telefónica de los empleados de SU DEPARTAMENTO
+pista-> usar funcion de mysql user(), coger lo necesario con locate
+se debe tener en cuenta para crear la vista sql security {definer|invoker} */
+
 
 
 
