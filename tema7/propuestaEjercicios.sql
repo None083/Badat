@@ -1,20 +1,35 @@
+use ventapromoscompleta;
 /*
 Para la bd promociones:
 Prepara una vista que se llamará CATALOGOPRODUCTOS  que tenga la referencia del artículo,
 código y nombre de categoría, nombre del artículo, el precio base y el precio de venta HOY */
 
+/*
+QUEREMOS TENER PREPARADO SIEMPRE (VISTA) UN LISTADO CON LOS PRECIOS A DÍA DE HOY (CUANDO SE CONSULTE) DE LOS ARTÍCULOS
+NECESITO: refart, nomarticulo preciobase, pecioHoy, codcat
+
+*/
 drop view if exists catalogoprecios;
 
-
+create view catalogoprecios
+(referencia, descripcion, preciobase, precioHoy, categoria)
+as
 select refart, nomart, preciobase, precioventa, codcat
 from articulos
-where refart not in
-	(select catalogospromos.reafart
-    from catalogospromos join promociones on catalogospromos.codpromo=promociones.codpromo,
-    where curdate() between promociones.fecinipromo
-		and date_add(promociones.fecinipromo, interval promociones.duracionpromo day)
-    )
-union
+where refart not in		
+	(select catalogospromos.refart	 
+	from catalogospromos join promociones on catalogospromos.codpromo = promociones.codpromo	
+	where curdate() between promociones.fecinipromo	
+				and date_add(promociones.fecinipromo,
+ interval promociones.duracionpromo day)
+	)
+union all /* se repiten */
+-- union  /* no se repiten */
+select articulos.desart, catalogospromos.precioventa
+from catalogospromos join promociones on catalogospromos.codpromo = promociones.codpromo
+	where curdate() between promociones.fecinipromo	
+				and date_add(promociones.fecinipromo,
+ interval promociones.duracionpromo day);
 
 
 
@@ -25,12 +40,6 @@ PISTA ==> USAR FUNCIÓN DE MYSQL USER()
 AL CREAR LA VISTA TENER EN CUENTA ESTO:
 [SQL SECURITY { DEFINER | INVOKER }]
 */
-select substring_index(user(), '@', 1)
-
-
-
-
-
 
 
 -- PARA PROBAR, VAMOS A USAR DOS USUARIOS: EL HABITUAL Y OTRO AL QUE LLAMAREMOS PRUEBA.

@@ -34,6 +34,7 @@ begin
     where tipodir= 'F' or tipodir= 'f'
     order by nomde;
 end **
+delimiter ;
 call ejercicio3_4();
 
 -- 4
@@ -43,6 +44,96 @@ create procedure ejercicio4_4(depto int)
 begin
 	
 end **
+
+/*16.Hallar cuántos departamentos hay y el presupuesto anual medio de ellos.*/
+
+/* si nos pidieran solo el número de deptos */
+drop function if exists funcion_ejer_6_4_16;
+delimiter $$
+
+create function funcion_ejer_6_4_16()
+returns int
+begin
+	-- select funcion_ejer_6_4_16();
+	declare numdeptos int;
+	set numdeptos = 
+					(select count(*)
+					from departamentos);
+
+	return numdeptos;
+
+	/* return (select count(*)
+			   from departamentos);
+	*/
+
+end $$
+delimiter ;
+
+/* con un procedimiento */
+drop procedure if exists proc_ejer_6_4_16;
+delimiter $$
+
+create procedure proc_ejer_6_4_16(out numdeptos int)
+begin
+	/* call proc_ejer_6_4_16(@numerodeptos);
+		select @numerodeptos;
+	*/
+	
+	set numdeptos = 
+					(select count(*)
+					from departamentos);
+
+end $$
+delimiter ;
+/* tal y como es el enunciado: */
+drop procedure if exists proc_ejer_6_4_16_real;
+delimiter $$
+
+create procedure proc_ejer_6_4_16_real
+	(out numdeptos int, out mediapresu decimal(10,2))
+begin
+	/* call proc_ejer_6_4_16_real(@numerodeptos, @presupuesto);
+		select 'num deptos: ',@numerodeptos, 'presupuesto medio: ', @presupuesto;
+		select concat('num deptos: ',@numerodeptos, ' presupuesto medio: ', @presupuesto);
+	*/
+	select count(*), sum(presude) into numdeptos, mediapresu
+	from departamentos;
+
+end $$
+delimiter ;
+
+
+/*17.Hallar el salario medio de los empleados cuyo salario no supera en más de un 20% al salario mínimo 
+de los empleados que tienen algún hijo y su salario medio por hijo es mayor que 100.000 u.m.*/
+
+
+/*18.Hallar la diferencia entre el salario más alto y el más bajo.*/
+
+
+/*19.Hallar el número medio de hijos por empleado para todos los empleados que no tienen más de dos hijos.*/
+
+
+/*20.Hallar el salario medio para cada grupo de empleados con igual comisión y para los que no la tengan.*/
+
+
+/*21.Para cada extensión telefónica, hallar cuantos empleados la usan y el salario medio de éstos.*/
+
+
+/*22.Para los departamentos cuyo salario medio supera al de la empresa, hallar cuantas extensiones telefónicas tienen.*/
+
+
+/*23.Hallar el máximo valor de la suma de los salarios de los departamentos.*/
+
+
+/*24.Hallar por orden alfabético, los nombres de los empleados que son directores en funciones.*/
+
+
+/*25.A los empleados que son directores en funciones se les asignará una gratificación del 5% de su 
+salario. Hallar por orden alfabético, los nombres de estos empleados y la gratificación correspondiente a cada uno.*/
+
+
+
+
 
 -- 26
 -- Borrar de la tabla EMPLEADOS a los empleados cuyo salario (sin incluir la comisión) 
