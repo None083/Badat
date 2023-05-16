@@ -106,32 +106,199 @@ delimiter ;
 /*17.Hallar el salario medio de los empleados cuyo salario no supera en más de un 20% al salario mínimo 
 de los empleados que tienen algún hijo y su salario medio por hijo es mayor que 100.000 u.m.*/
 
+drop procedure if exists proc_ejer_6_4_17;
+delimiter $$
+
+create procedure proc_ejer_6_4_17
+	()
+begin
+	--  call proc_ejer_6_4_17();
+	
+	select avg(salarem)
+	from empleados
+    where salarem <= all (select 1.20*min(salarem)
+							from empleados
+                            where numhiem>0
+                            group by numhiem
+                            having avg(salarem) > 100);
+
+end $$
+delimiter ;
+
 
 /*18.Hallar la diferencia entre el salario más alto y el más bajo.*/
 
+drop procedure if exists proc_ejer_6_4_18;
+delimiter $$
+
+create procedure proc_ejer_6_4_18()
+begin
+	/* call proc_ejer_6_4_18();
+	*/
+	
+	select max(salarem) - min(salarem) as diferencia
+	from empleados;
+end $$
+delimiter ;
 
 /*19.Hallar el número medio de hijos por empleado para todos los empleados que no tienen más de dos hijos.*/
 
+drop procedure if exists proc_ejer_6_4_19;
+delimiter $$
+
+create procedure proc_ejer_6_4_19()
+begin
+	/* call proc_ejer_6_4_19();
+	*/
+	
+	select round(avg(numhiem)/count(*), 2)
+    from empleados
+	where numhiem <= 2;
+end $$
+delimiter ;
 
 /*20.Hallar el salario medio para cada grupo de empleados con igual comisión y para los que no la tengan.*/
 
+drop procedure if exists proc_ejer_6_4_20;
+delimiter $$
+
+create procedure proc_ejer_6_4_20()
+begin
+	/* call proc_ejer_6_4_20();
+	*/
+	
+	select ifnull(comisem, 'sin comisión'), 
+		   avg(salarem) as salario_medio, count(*)
+	from empleados
+	group by ifnull(comisem, 'sin comisión')
+	having count(*) > 1;
+end $$
+delimiter ;
 
 /*21.Para cada extensión telefónica, hallar cuantos empleados la usan y el salario medio de éstos.*/
 
+drop procedure if exists proc_ejer_6_4_21;
+delimiter $$
+
+create procedure proc_ejer_6_4_21()
+begin
+	/* call proc_ejer_6_4_21();
+	*/	
+	select extelem, count(*) as numero_usuarios,  
+		   avg(salarem) as salario_medio
+	from empleados
+	group by extelem;
+
+	/* igual pero ahora solo me interesa obtener
+	   las extensiones que son utilizadas por entre
+	   1 y 3 personas
+	*/
+	select extelem, count(*) as numero_usuarios,  
+		   avg(salarem) as salario_medio
+	from empleados
+	group by extelem
+	having count(*) between 1 and 3;
+
+end $$
+delimiter ;
+
+/* numero medio de usuarios que utilizan las extensiones
+   telefónicas
+*/
+drop procedure if exists proc_ejer_6_4_21_B;
+delimiter $$
+
+create procedure proc_ejer_6_4_21_B()
+begin
+	/* call proc_ejer_6_4_21_B();
+	*/
+
+	select avg(e.numero_usuarios)
+	from (
+	select extelem, count(*) as numero_usuarios,  
+		   avg(salarem) as salario_medio
+	from empleados
+	group by extelem) as e;
+
+end $$
+delimiter ;
 
 /*22.Para los departamentos cuyo salario medio supera al de la empresa, hallar cuantas extensiones telefónicas tienen.*/
 
+drop procedure if exists proc_ejer_6_4_22;
+delimiter $$
+
+create procedure proc_ejer_6_4_22()
+begin
+	/* call proc_ejer_6_4_22();
+	*/
+SELECT empleados.numde, departamentos.nomde, 
+	count(DISTINCT empleados.extelem)
+FROM empleados JOIN departamentos 
+	on departamentos.numde=empleados.numde
+GROUP BY empleados.numde
+HAVING avg(empelados.salarem)>
+					(SELECT avg(salarem) 
+					 FROM empleados)
+ORDER BY 1;
+end $$
+delimiter ;
 
 /*23.Hallar el máximo valor de la suma de los salarios de los departamentos.*/
 
+drop procedure if exists proc_ejer_6_4_23;
+delimiter $$
+
+create procedure proc_ejer_6_4_23()
+begin
+	-- call proc_ejer_6_4_23();
+	select numde, sum(salarem)
+	from empleados
+	group by numde
+	having sum(salarem) >= all (select sum(salarem)
+								from empleados
+								group by numde);
+end $$
+delimiter ;
 
 /*24.Hallar por orden alfabético, los nombres de los empleados que son directores en funciones.*/
 
+drop procedure if exists proc_ejer_6_4_24;
+delimiter $$
+
+create procedure proc_ejer_6_4_24()
+begin
+	-- call proc_ejer_6_4_24();
+	-- Aunque no lo pide el ejercicio, vamos añadir el nombre del departamento que dirige
+    -- estamos seleccionando a los directores actuales
+    select nomde as departamento, concat_ws(' ', ape1em, ape2em, nomem) as 'director/a'
+	from empleados join dirigir
+		on empleados.numem = dirigir.numempdirec
+			join departamentos
+				on dirigir.numdepto = departamentos.numde
+	where tipodir= 'F' and ifnull(fecfindir,curdate())>= curdate();
+end $$
+delimiter ;
 
 /*25.A los empleados que son directores en funciones se les asignará una gratificación del 5% de su 
 salario. Hallar por orden alfabético, los nombres de estos empleados y la gratificación correspondiente a cada uno.*/
 
+drop procedure if exists proc_ejer_6_4_25;
+delimiter $$
 
+create procedure proc_ejer_6_4_25()
+begin
+	-- call proc_ejer_6_4_25();
+	select concat_ws(' ', ape1em, ape2em, nomem) as 'director/a', 
+		salarem*0.05 as gratificacion, nomde as departamento
+	from empleados join dirigir
+		on empleados.numem = dirigir.numempdirec
+			join departamentos
+				on dirigir.numdepto = departamentos.numde
+	where tipodir= 'F' and ifnull(fecfindir,curdate())>= curdate()
+    order by 1;
+end $$
+delimiter ;
 
 
 

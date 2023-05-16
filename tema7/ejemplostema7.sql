@@ -123,18 +123,6 @@ select numcolab, nombrecompleto, emailcolab
 from colaboradores
 ....*/
 
-/* Prepara una vista para la bd de promociones
-que se llamará CATALOGOPRODUCTOS que tenga la referencia del articulo, 
-el codigo de y nombre de categoria, nombre del articulo 
-y el precio base y el precio de venta HOY */
-
-
-/* Para la base de datos de empresaclase: 
-prepara una vista que se llamará LISTINTELEFONICO, en la que cada 
-usuario podrá consultar la extensión
-telefónica de los empleados de SU DEPARTAMENTO
-pista-> usar funcion de mysql user(), coger lo necesario con locate
-se debe tener en cuenta para crear la vista sql security {definer|invoker} */
 
 
 
