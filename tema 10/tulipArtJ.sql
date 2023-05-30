@@ -1,37 +1,37 @@
 create table etiquetas(
-	idEtiqueta int,
-	nombre varchar(60)
-	constraint pk_etiquetas primary key(idEtiqueta)
+	idetiqueta integer,
+	nombre character varying(60),
+	constraint pk_etiquetas primary key (idetiqueta)
 );
 
+drop table materiales if exists;
 create table materiales(
-	idMaterial int,
-	descripcion varchar (50),
-	constraint pk_materiales primary key (idMaterial)
+	idetiqueta integer,
+	descripcion character varying(50),
+	constraint pk_materiales primary key (idmaterial)
 )inherits(etiquetas);
 
+drop table estilos if exists;
 create table estilos(
-	idEstilo int,
-	descripcion varchar (50),
+	idetiqueta integer,
+	descripcion character varying (50),
 	constraint pk_estilos primary key (idestilo)
 )inherits(etiquetas);
 
-create rule regla_materiales
+create rule regla_tipoetiqueta_material
 as
 	on insert to materiales
 		where exists
-			(select * from etiquetas
-			where estilos.idEtiqueta
-			= new.idEtiqueta)
+			(select * from estilos
+				where estilos.idetiqueta = new.idetiqueta)
 	do instead nothing;
 	
-create rule regla_materiales
+create rule regla_tipoetiqueta_estilo
 as
-	on update to materiales
+	on update to estilos
 		where exists
-			(select * from etiquetas
-			where estilos.idEtiqueta
-			= new.idEtiqueta)
+			(select * from materiales
+			where materiales.idetiqueta = new.idetiqueta)
 	do instead nothing;
 	
 	
@@ -39,12 +39,12 @@ as
 -- INSERCION DATOS
 
 insert into etiquetas
-(idEtiqueta, nombre)
+(idetiqueta, nombre)
 values
 (1,'Pop art'); -- solo está en etiquetas
 
 insert into materiales
-	(idEtiqueta, nombre, idMaterial, descripción)
+	(idetiqueta, nombre, idmaterial, descripcion)
 values
 	(2,'Acuarela', 10, 'Base de agua, translúcido'),
 	(3,'Lápices polychromos', 11, 'Mina cremosa, color saturado'),
@@ -59,7 +59,7 @@ select * from materiales; -- del idEtiqueta 2 a 5
 
 
 insert into estilos
-	(idEstilo, nombre, idEstilo, descripción)
+	(idetiqueta, nombre, idestilo, descripcion)
 values
 	(6,'Realista', 10, 'Alta precisión en el detalle');
 
@@ -70,7 +70,7 @@ select * from only etiquetas; -- solo el idEstilo 1
 select * from estilos; -- solo el idEstilo 6
 
 insert into estilos
-	(idEstilo, nombre, idEstilo, descripción)
+	(idetiqueta, nombre, idestilo, descripcion)
 values
 	(3,'Digital', 11,'Uso de herramientas tecnológicas');
 	
@@ -79,4 +79,3 @@ select * from etiquetas; -- todos
 select * from only etiquetas; -- solo el idEstilo 1
 
 select * from estilos; -- solo el idEstilo 6
-
